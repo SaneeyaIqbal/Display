@@ -123,9 +123,9 @@ class App extends Component {
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td><ul>{item.skills.map((item, index) => (
-                  <ol key={item}>
-                    <ol>{item}</ol>
-                  </ol>
+                  <li key={item}>
+                    <li>{item}</li>
+                  </li>
                 ))}</ul>
                 </td>
               </tr>
