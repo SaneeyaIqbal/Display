@@ -114,7 +114,7 @@ class App extends Component {
             <tr>
               <th onClick={this.sortByName}>Firstname</th>
               <th>Lastname</th>
-              <th onClick={this.sortBySkills}>Skills</th>
+              <u><th onClick={this.sortBySkills}>Skills</th></u>
             </tr>
           </thead>
           <tbody>
