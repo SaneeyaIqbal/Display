@@ -1394,5 +1394,19 @@
     },
     "theme": "vs-dark",
     "themeBackground": "#1e1e1e",
-    "pickerWorkingDir": "/home/saneeyaiqbal/Desktop"
+    "pickerWorkingDir": "/home/saneeyaiqbal/Desktop",
+    "windowsState": {
+        "lastActiveWindow": {
+            "folder": "file:///home/saneeyaiqbal/Desktop/React",
+            "backupPath": "/home/saneeyaiqbal/Desktop/React/Display/display/~/.vscode-root/Backups/1b44cc25f0fc3e191a4c0fdab0ba5457",
+            "uiState": {
+                "mode": 0,
+                "x": 448,
+                "y": 186,
+                "width": 1024,
+                "height": 768
+            }
+        },
+        "openedWindows": []
+    }
 }

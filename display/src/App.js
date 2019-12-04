@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import axios from 'axios';
 
 class Details extends Component {
   constructor(props) {
@@ -7,10 +8,11 @@ class Details extends Component {
     this.state = {
       firstName: '',
       lastName: '',
-      skills: ''
+      skills: '',
+      // searchname:''
     }
     this.addDetails = this.addDetails.bind(this);
-    
+
   }
   addDetails() {
     let skill = this.state.skills.split(',');
@@ -26,8 +28,8 @@ class Details extends Component {
 
   render() {
     return (
-      <div className="">  
-      <h2>STUDENT DETAILS</h2>      
+      <div className="">
+        <h2>STUDENT DETAILS</h2>
         <div className='form'>
           Firstname:<br />
           <input className="input" type="text" onChange={(event) => this.setState({ firstName: event.target.value })} />
@@ -40,8 +42,8 @@ class Details extends Component {
           <br />
           <button className="button" onClick={this.addDetails}>Add</button>
         </div>
+        {/* <input type="text" className="input" onChange={this.searchBar()} placeholder="Search..." /> */}
       </div>
-
     )
   }
 }
@@ -54,49 +56,65 @@ class App extends Component {
       skills: '',
       students: [
         {
-          'firstName': 'Pramod',
-          'lastName': 'Ray',
-          'skills': ['Python', 'HTML', 'CSS']
-        },
-        {
           'firstName': 'Sachin',
           'lastName': 'Suresh',
-          'skills': ['Python', 'HTML', 'CSS', 'CAT']
+          'skills_list': ['Python', 'HTML', 'CSS', 'CAT']
+        },
+        {
+          'firstName': 'Pramod',
+          'lastName': 'Ray',
+          'skills_list': ['Python', 'HTML', 'CSS']
         },
         {
           'firstName': 'Samarth',
           'lastName': 'Hegde',
-          'skills': ['Python', 'Git', 'CSS']
+          'skills_list': ['Python', 'Git', 'CSS']
+        },
+        {
+          'firstName': 'Vishal',
+          'lastName': 'Sobani',
+          'skills_list': ['Python', 'Git', 'CSS', 'Django']
         }
       ]
     }
     this.showDetails = this.showDetails.bind(this);
-    this.sortByName = this.sortByName.bind(this);
+    this.sortByfirstName = this.sortByfirstName.bind(this);
+    this.sortBylastName = this.sortBylastName.bind(this);
     this.sortBySkills = this.sortBySkills.bind(this);
+    // this.searchBar = this.searchBar.bind(this);
   }
 
-  sortByName() {
-    let sortName = this.state.students.sort(function(a,b){
-      return a.firstName.localeCompare(b.firstName)})
-      this.setState({
-        students:sortName
-      });
-    }
-  
-    sortBySkills() {
-      let sortSkills = this.state.students.sort(function(a,b){
-        if (a.skills.length > b.skills.length) {
-          return -1;
-        }
-        if (a.skills.length < b.skills.length){
+  sortByfirstName() {
+    let sortName = this.state.students.sort(function (a, b) {
+      return a.firstName.localeCompare(b.firstName)
+    })
+    this.setState({
+      students: sortName
+    });
+  }
+
+  sortBylastName() {
+    let sortName = this.state.students.sort(function (a, b) {
+      return a.lastName.localeCompare(b.lastName)
+    })
+    this.setState({
+      students: sortName
+    });
+  }
+  sortBySkills() {
+    let sortSkills = this.state.students.sort(function (a, b) {
+      if (a.skills_list.length > b.skills_list.length) {
+        return -1;
+      }
+      if (a.skills_list.length < b.skills_list.length) {
         return 1;
-        }
-        return 0;
-      });
-      this.setState({
-        students:sortSkills
-      });
-    }
+      }
+      return 0;
+    });
+    this.setState({
+      students: sortSkills
+    });
+  }
 
   showDetails(note) {
     this.setState({
@@ -104,6 +122,18 @@ class App extends Component {
     });
   }
 
+  componentDidMount() {
+    axios.get("http://127.0.0.1:8000/students/student/").then(res => {
+      this.setState({
+      students:res.data});
+      })}
+
+  // searchBar(event) {
+  //     let inputData = event.target.value
+  //      this.setState({
+  //       searchname:inputData
+  //      })
+  //   }
 
   render() {
     return (
@@ -112,9 +142,9 @@ class App extends Component {
         <table className="body">
           <thead>
             <tr>
-              <th onClick={this.sortByName}>Firstname</th>
-              <th>Lastname</th>
-              <u><th onClick={this.sortBySkills}>Skills</th></u>
+              <th onClick={this.sortByfirstName}>Firstname</th>
+              <th onClick={this.sortBylastName}>Lastname</th>
+              <th onClick={this.sortBySkills}>Skills</th>
             </tr>
           </thead>
           <tbody>
@@ -122,7 +152,7 @@ class App extends Component {
               <tr key={index}>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
-                <td><ul>{item.skills.map((item, index) => (
+                <td><ul>{item.skills_list.map((item, index) => (
                   <li key={item}>
                     <li>{item}</li>
                   </li>
