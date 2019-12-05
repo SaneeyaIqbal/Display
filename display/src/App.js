@@ -9,15 +9,14 @@ class Details extends Component {
       firstName: '',
       lastName: '',
       skills: '',
-      // searchname:''
     }
     this.addDetails = this.addDetails.bind(this);
 
   }
   addDetails() {
-    let skill = this.state.skills.split(',');
-    let text = this.state;
-    text['skills'] = skill;
+    // let skill = this.state.skills.split(',');
+    // let text = this.state;
+    // text['skills'] = skill;
     this.props.showDetails(this.state);
     this.setState({
       firstName: '',
@@ -42,11 +41,22 @@ class Details extends Component {
           <br />
           <button className="button" onClick={this.addDetails}>Add</button>
         </div>
-        {/* <input type="text" className="input" onChange={this.searchBar()} placeholder="Search..." /> */}
       </div>
     )
   }
 }
+
+class SearchName extends Component {
+
+  render() {
+    return (
+      <div className='search'>
+        <input type="text" onChange={(event) => this.props.searchinfo(event.target.value)} placeholder="Search for names.." ></input>
+      </div>
+    )
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -54,34 +64,16 @@ class App extends Component {
       firstName: '',
       lastName: '',
       skills: '',
-      students: [
-        {
-          'firstName': 'Sachin',
-          'lastName': 'Suresh',
-          'skills_list': ['Python', 'HTML', 'CSS', 'CAT']
-        },
-        {
-          'firstName': 'Pramod',
-          'lastName': 'Ray',
-          'skills_list': ['Python', 'HTML', 'CSS']
-        },
-        {
-          'firstName': 'Samarth',
-          'lastName': 'Hegde',
-          'skills_list': ['Python', 'Git', 'CSS']
-        },
-        {
-          'firstName': 'Vishal',
-          'lastName': 'Sobani',
-          'skills_list': ['Python', 'Git', 'CSS', 'Django']
-        }
-      ]
+      students: [],
+      searchname: ''
     }
     this.showDetails = this.showDetails.bind(this);
     this.sortByfirstName = this.sortByfirstName.bind(this);
     this.sortBylastName = this.sortBylastName.bind(this);
     this.sortBySkills = this.sortBySkills.bind(this);
-    // this.searchBar = this.searchBar.bind(this);
+    this.searchBar = this.searchBar.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
+    this.updateDB = this.updateDB.bind(this);
   }
 
   sortByfirstName() {
@@ -101,6 +93,7 @@ class App extends Component {
       students: sortName
     });
   }
+
   sortBySkills() {
     let sortSkills = this.state.students.sort(function (a, b) {
       if (a.skills_list.length > b.skills_list.length) {
@@ -117,51 +110,72 @@ class App extends Component {
   }
 
   showDetails(note) {
-    this.setState({
-      students: [...this.state.students, note]
-    });
+    axios.post("http://127.0.0.1:8000/students/student/create/", note)
+      .then(() => {this.updateDB();})
   }
 
   componentDidMount() {
+    this.updateDB();
+  }
+
+  updateDB() {
     axios.get("http://127.0.0.1:8000/students/student/").then(res => {
       this.setState({
-      students:res.data});
-      })}
+        students: res.data
+      });
+    })
+  }
 
-  // searchBar(event) {
-  //     let inputData = event.target.value
-  //      this.setState({
-  //       searchname:inputData
-  //      })
-  //   }
+  searchBar(text) {
+    this.setState({
+      searchname: text
+    })
+  }
+
+  deleteItem(id){
+    axios.delete("http://127.0.0.1:8000/students/"+id.toString()+"/delete/")
+    .then(() => {this.updateDB();})
+
+  }
 
   render() {
     return (
       <div className="App">
         <Details showDetails={this.showDetails} />
+        <SearchName searchinfo={this.searchBar} />
         <table className="body">
           <thead>
             <tr>
               <th onClick={this.sortByfirstName}>Firstname</th>
               <th onClick={this.sortBylastName}>Lastname</th>
               <th onClick={this.sortBySkills}>Skills</th>
+              <th>Operation</th>
             </tr>
           </thead>
           <tbody>
-            {this.state.students.map((item, index) => (
-              <tr key={index}>
-                <td>{item.firstName}</td>
-                <td>{item.lastName}</td>
-                <td><ul>{item.skills_list.map((item, index) => (
-                  <li key={item}>
-                    <li>{item}</li>
-                  </li>
-                ))}</ul>
-                </td>
-              </tr>
-            )
-            )
-            }
+            {this.state.students.filter(name => {
+              return name.firstName.toLowerCase().includes(this.state.searchname.toLowerCase()) ||
+                name.lastName.toLowerCase().includes(this.state.searchname.toLowerCase());
+            })
+              .map((item, index) => (
+                <tr key={index} >
+                  <td>{item.firstName}</td>
+                  <td>{item.lastName}</td>
+                  <td>
+                    <ul>
+                      {/* {console.log("item: ",item)}{console.log("skills_array", item.skills_array)} */}
+                      {item.skills_array.map((item_new, index_new) =>
+                        <li key={index_new}>{item_new}</li>
+                      )
+                      }
+                    </ul>
+                  </td>
+                  <td><ul>
+                    <button className="button">Edit</button><br />
+                    <br /><button className="button" onClick={(event)=>this.deleteItem(item.id)}>Delete</button>
+                  </ul></td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
