@@ -4,7 +4,7 @@ from django.db import models
 class Student(models.Model):
     firstName = models.CharField(max_length=35,blank=True)
     lastName = models.CharField(max_length=35,blank=True)
-    skills = models.CharField(max_length=40)
+    skills = models.CharField (max_length=40)
 
     def __str__(self):
         return self.firstName

@@ -3,6 +3,12 @@ from .models import *
 
 
 class StudentSerializer(serializers.ModelSerializer):
+    skills_array = serializers.ReadOnlyField(source='skills_list')
     class Meta:
         model = Student
-        fields = ('firstName','lastName','skills_list')
+        fields = ('id','firstName','lastName','skills_array')
+
+class CreateStudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ('id','firstName', 'lastName', 'skills')
