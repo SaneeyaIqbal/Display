@@ -135,14 +135,14 @@ class App extends Component {
   deleteItem(id){
     axios.delete("http://127.0.0.1:8000/students/"+id.toString()+"/delete/")
     .then(() => {this.updateDB();})
-
   }
-
+  
   render() {
     return (
       <div className="App">
         <Details showDetails={this.showDetails} />
         <SearchName searchinfo={this.searchBar} />
+
         <table className="body">
           <thead>
             <tr>
