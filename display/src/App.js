@@ -111,7 +111,7 @@ class App extends Component {
 
   showDetails(note) {
     axios.post("http://127.0.0.1:8000/students/student/create/", note)
-      .then(() => {this.updateDB();})
+      .then(() => { this.updateDB(); })
   }
 
   componentDidMount() {
@@ -132,11 +132,11 @@ class App extends Component {
     })
   }
 
-  deleteItem(id){
-    axios.delete("http://127.0.0.1:8000/students/"+id.toString()+"/delete/")
-    .then(() => {this.updateDB();})
+  deleteItem(id) {
+    axios.delete("http://127.0.0.1:8000/students/" + id.toString() + "/delete/")
+      .then(() => { this.updateDB(); })
   }
-  
+
   render() {
     return (
       <div className="App">
@@ -172,7 +172,7 @@ class App extends Component {
                   </td>
                   <td><ul>
                     <button className="button">Edit</button><br />
-                    <br /><button className="button" onClick={(event)=>this.deleteItem(item.id)}>Delete</button>
+                    <br /><button className="button" onClick={(event) => this.deleteItem(item.id)}>Delete</button>
                   </ul></td>
                 </tr>
               ))}
