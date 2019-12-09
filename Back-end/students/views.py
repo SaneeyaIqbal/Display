@@ -38,7 +38,7 @@ def api_create_student_view(request):
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE', ])
-def api_booking_delete_view(request,id):
+def api_student_delete_view(request,id):
     try:
         student = Student.objects.get(id=id)
     except Student.DoesNotExist:
